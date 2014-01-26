@@ -1,0 +1,25 @@
+# The item to tame your bots.
+# Reference: http://jd.bukkit.org/rb/apidocs/org/bukkit/Material.html
+tameItem: Cookie
+# Your message prefix.
+messagePrefix: '&6[NPCSquad]'
+# Your permission message.
+permissionMessage: '&cYou do not have the permission to tame.'
+# How many attempts should the player make before taming the bot.
+botTameAttempts: 5
+# How many minutes before the bot should de-spawn after re-spawn.
+despawnTime: 10
+# Set the amount of bots limited for each world.
+botLimit: 20
+# The names you want to randomly set for each bot.
+botNames:
+- Fred
+- George
+- Harry
+- Richard
+- Benjamin
+# The worlds you want NPC's to spawn in.
+worlds:
+- world
+- world_nether
+- world_the_end

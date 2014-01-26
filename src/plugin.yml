@@ -1,0 +1,8 @@
+name: NPCSquad
+main: main.java.net.bigbadcraft.npcsquad.NPCSquad
+version: 1.0.0
+author: [BigBadHenz]
+commands:
+  npcsquad:
+    description: The main command.
+    aliases: [nsquad, ns]
