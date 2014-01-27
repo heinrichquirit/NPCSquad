@@ -70,18 +70,15 @@ public class NPCSquadManager {
 	}
 	
 	public void eliminateAllNPCs(String world) {
-		NPCRegistry npcRegistry = CitizensAPI.getNPCRegistry();
 		
-		npcRegistry.deregisterAll();
-		Iterator<NPC> iterator = npcRegistry.iterator();
+		/* Needs to be fixed, freezes server */
 		
-		while (iterator.hasNext()) {
-			iterator.next().destroy();
+		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
+		
+		do {
 			iterator.next().despawn();
-			if (!iterator.hasNext()) {
-				break;
-			}
-		}
+			iterator.next().destroy();
+		} while (iterator.hasNext());
 		
 	}
 	
@@ -104,7 +101,7 @@ public class NPCSquadManager {
 		
 		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
 		
-		int count = 1;
+		int count = 0;
 		while (iterator.hasNext()) {
 			count++;
 		}
@@ -116,7 +113,7 @@ public class NPCSquadManager {
 		
 		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
 		
-		int count = 1;
+		int count = 0;
 		
 		while (iterator.hasNext()) {
 			if (!iterator.next().isProtected()) {

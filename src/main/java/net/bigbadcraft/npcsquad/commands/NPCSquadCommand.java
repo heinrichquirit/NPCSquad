@@ -64,6 +64,7 @@ public class NPCSquadCommand implements CommandExecutor {
 			}
 			else if (Utils.isEqual(args[0], "killallbots")) {
 				// also wipe yaml data
+				// including citizens as well
 				if (Utils.isPermitted(player, Permission.NPC_ADMIN)) {
 					player.sendMessage(PREFIX + " Eliminated " + G + npcManager.getTotalNPCs(world) + W + " bot(s) in world " + G + world + W + ".");
 					npcManager.eliminateAllNPCs(world);
