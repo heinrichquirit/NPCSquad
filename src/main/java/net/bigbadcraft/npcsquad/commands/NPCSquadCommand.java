@@ -18,9 +18,11 @@ public class NPCSquadCommand implements CommandExecutor {
 	
 	private NPCSquad plugin;
 	private NPCSquadManager npcManager;
+	private String PREFIX;
 	public NPCSquadCommand(NPCSquad plugin) {
 		this.plugin = plugin;
 		npcManager = this.plugin.npcManager;
+		PREFIX = plugin.messagePrefix;
 	}
 	
 	@Override
@@ -41,6 +43,7 @@ public class NPCSquadCommand implements CommandExecutor {
 	}
 	
 	private void processCommand(Player player, String[] args) {
+		String world = player.getWorld().getName();
 		if (args.length == 0) {
 			player.sendMessage(Utils.isPermitted(player, Permission.NPC_ADMIN) ? adminMenu() : helpMenu());
 		}
@@ -52,16 +55,18 @@ public class NPCSquadCommand implements CommandExecutor {
 				
 			}
 			else if (Utils.isEqual(args[0], "untamedbots")) {
-				
+				player.sendMessage(PREFIX + " Total untamed bot(s) in world " + G + world + W + " is " + G + npcManager.getTotalUntamedNPCs(world) + W + ".");
 			}
 			else if (Utils.isEqual(args[0], "spawnbot")) {
 				if (Utils.isPermitted(player, Permission.NPC_ADMIN)) {
-					npcManager.spawnNPCForPlayer(player);
+					npcManager.spawnNPCForPlayer(player, false);
 				}
 			}
 			else if (Utils.isEqual(args[0], "killallbots")) {
+				// also wipe yaml data
 				if (Utils.isPermitted(player, Permission.NPC_ADMIN)) {
-					
+					player.sendMessage(PREFIX + " Eliminated " + G + npcManager.getTotalNPCs(world) + W + " bot(s) in world " + G + world + W + ".");
+					npcManager.eliminateAllNPCs(world);
 				}
 			}
 		}

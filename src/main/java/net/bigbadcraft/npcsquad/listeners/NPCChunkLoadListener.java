@@ -33,7 +33,7 @@ public class NPCChunkLoadListener implements Listener {
 				int x = random.nextInt(chunk.getX());
 				int z = random.nextInt(chunk.getZ());
 				
-				plugin.npcManager.chunkSpawnNPCs(world, x, z, remainder);
+				plugin.npcManager.chunkSpawnNPCs(world, x, z, remainder, false);
 				Utils.log(Level.INFO, "Spawned " + remainder + " bots in world: " + world); 
 			}
 		}

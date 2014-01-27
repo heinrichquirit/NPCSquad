@@ -1,5 +1,6 @@
 package main.java.net.bigbadcraft.npcsquad.managers;
 
+import java.util.Iterator;
 import java.util.Random;
 
 import main.java.net.bigbadcraft.npcsquad.NPCSquad;
@@ -10,6 +11,7 @@ import net.citizensnpcs.api.npc.NPCRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
@@ -20,8 +22,8 @@ public class NPCSquadManager {
 		this.plugin = plugin;
 	}
 	
-	public void distributeNPCs(String world, int x, int y, int z) {
-		if (plugin.botNames != null) {
+	public void distributeNPCs(String world, int x, int y, int z, boolean protectNPCs) {
+		if (!plugin.botNames.isEmpty()) {
 			NPCRegistry npcRegistry = CitizensAPI.getNPCRegistry();
 			
 			Random random = new Random();
@@ -29,11 +31,12 @@ public class NPCSquadManager {
 			NPC npc = npcRegistry.createNPC(EntityType.PLAYER, plugin.botNames.get(random.nextInt(size)));
 			
 			npc.spawn(new Location(Bukkit.getWorld(world), x + 0.0D, y + 1.0D,z + 0.0D));
+			npc.setProtected(protectNPCs);
 		}
 	}
 	
-	public void chunkSpawnNPCs(String world, int x, int z, int botAmount) {
-		if (plugin.botNames != null) {
+	public void chunkSpawnNPCs(String world, int x, int z, int botAmount, boolean protectNPCs) {
+		if (!plugin.botNames.isEmpty()) {
 			NPCRegistry npcRegistry = CitizensAPI.getNPCRegistry();
 			
 			Random random = new Random();
@@ -42,11 +45,12 @@ public class NPCSquadManager {
 			
 			for (int i = 0; i < botAmount; i++) {
 				npc.spawn(new Location(Bukkit.getWorld(world), x + 0.0D, 1.0D,z + 0.0D));
+				npc.setProtected(protectNPCs);
 			}
 		}
 	}
 	
-	public void spawnNPCForPlayer(Player player) {
+	public void spawnNPCForPlayer(Player player, boolean protectNPC) {
 		NPCRegistry npcRegistry = CitizensAPI.getNPCRegistry();
 		
 		Random random = new Random();
@@ -62,14 +66,65 @@ public class NPCSquadManager {
 		}
 		
 		npc.spawn(loc.add(0.0D, 1.0D, 0.0D));
+		npc.setProtected(protectNPC);
 	}
 	
 	public void eliminateAllNPCs(String world) {
+		NPCRegistry npcRegistry = CitizensAPI.getNPCRegistry();
+		
+		npcRegistry.deregisterAll();
+		Iterator<NPC> iterator = npcRegistry.iterator();
+		
+		while (iterator.hasNext()) {
+			iterator.next().destroy();
+			iterator.next().despawn();
+			if (!iterator.hasNext()) {
+				break;
+			}
+		}
 		
 	}
 	
+	public boolean isNPC(Entity entity) {
+		return CitizensAPI.getNPCRegistry().getNPC(entity) != null;
+	}
+	
+	public NPC getNPC(Entity entity) {
+		if (isNPC(entity)) {
+			return CitizensAPI.getNPCRegistry().getNPC(entity);
+		}
+		return null;
+	}
+	
+	public NPC getNPC(int id) {
+		return CitizensAPI.getNPCRegistry().getById(id);
+	}
+	
 	public int getTotalNPCs(String world) {
-		return 0;
+		
+		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
+		
+		int count = 1;
+		while (iterator.hasNext()) {
+			count++;
+		}
+		
+		return count;
+	}
+	
+	public int getTotalUntamedNPCs(String world) {
+		
+		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
+		
+		int count = 1;
+		
+		while (iterator.hasNext()) {
+			if (!iterator.next().isProtected()) {
+				count++;
+			}
+		}
+		
+		return count;
 	}
 	
 }

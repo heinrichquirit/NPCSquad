@@ -25,21 +25,20 @@ public class NPCTameListener implements Listener {
 	public void onTame(PlayerInteractEntityEvent event) {
 		Player player = event.getPlayer();
 		
-		if (event.getRightClicked() instanceof Player) {
-			player.sendMessage("An npc.");
-			NPC npc = (NPC) event.getRightClicked();
+		if (plugin.npcManager.isNPC(event.getRightClicked())) {
+			NPC npc = plugin.npcManager.getNPC(event.getRightClicked());
 			if (player.getItemInHand().getType() == Material.valueOf(plugin.tameItem.toUpperCase())) {
 				if (!npc.isProtected()) {
 					if (!plugin.playerNPCs.containsKey(player.getName())) {
-						ArrayList<NPC> npcs = new ArrayList<NPC>();
-						npcs.add(npc);
+						ArrayList<Integer> npcs = new ArrayList<Integer>();
+						npcs.add(npc.getId());
 						npc.setProtected(true);
 						plugin.playerNPCs.put(player.getName(), npcs);
 						plugin.saveHashMap();
 						player.sendMessage(PREFIX + " Successfully tamed bot.");
 					} else {
-						ArrayList<NPC> npcs = plugin.playerNPCs.get(player.getName());
-						npcs.add(npc);
+						ArrayList<Integer> npcs = plugin.playerNPCs.get(player.getName());
+						npcs.add(npc.getId());
 						npc.setProtected(true);
 						plugin.playerNPCs.put(player.getName(), npcs);
 						plugin.saveHashMap();
@@ -51,8 +50,6 @@ public class NPCTameListener implements Listener {
 			} else {
 				player.sendMessage(PREFIX + " Incorrect tame item, use: " + plugin.tameItem);
 			}
-		} else {
-			player.sendMessage("Not an NPC.");
 		}
 		
 	}

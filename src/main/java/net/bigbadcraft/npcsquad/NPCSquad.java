@@ -13,7 +13,6 @@ import main.java.net.bigbadcraft.npcsquad.listeners.NPCTameListener;
 import main.java.net.bigbadcraft.npcsquad.managers.NPCSquadManager;
 import main.java.net.bigbadcraft.npcsquad.utils.ConfigHandler;
 import main.java.net.bigbadcraft.npcsquad.utils.Utils;
-import net.citizensnpcs.api.npc.NPC;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,7 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class NPCSquad extends JavaPlugin {
 	
-	public HashMap<String, ArrayList<NPC>> playerNPCs = new HashMap<String, ArrayList<NPC>>();
+	public HashMap<String, ArrayList<Integer>> playerNPCs = new HashMap<String, ArrayList<Integer>>();
 	
 	public List<String> botNames;
 	public List<String> worlds;
@@ -89,7 +88,7 @@ public class NPCSquad extends JavaPlugin {
 	private void loadHashMap() {
 		if (tamedNPCConf.getKeys(true) != null) {
 			for (String names : tamedNPCConf.getKeys(true)) {
-				playerNPCs.put(names, (ArrayList<NPC>)tamedNPCConf.getList(names));
+				playerNPCs.put(names, (ArrayList<Integer>)tamedNPCConf.getList(names));
 			}
 		}
 	}
@@ -97,7 +96,7 @@ public class NPCSquad extends JavaPlugin {
 	public void saveHashMap() {
 		if (playerNPCs != null) {
 			configHandler.reloadTamedNPCConf();
-			for (Entry<String, ArrayList<NPC>> entry : playerNPCs.entrySet()) {
+			for (Entry<String, ArrayList<Integer>> entry : playerNPCs.entrySet()) {
 				tamedNPCConf.set(entry.getKey(), entry.getValue());
 			}
 			configHandler.saveTamedNPCConf();
