@@ -33,6 +33,7 @@ public class NPCTameListener implements Listener {
 						ArrayList<Integer> npcs = new ArrayList<Integer>();
 						npcs.add(npc.getId());
 						npc.setProtected(true);
+						npc.getNavigator().setTarget(player.getLocation());
 						plugin.playerNPCs.put(player.getName(), npcs);
 						plugin.saveHashMap();
 						player.sendMessage(PREFIX + " Successfully tamed bot.");
@@ -40,6 +41,9 @@ public class NPCTameListener implements Listener {
 						ArrayList<Integer> npcs = plugin.playerNPCs.get(player.getName());
 						npcs.add(npc.getId());
 						npc.setProtected(true);
+						// may use playermoveevent
+						// get all players npc and use this method to update its location
+						npc.getNavigator().setTarget(player.getLocation());
 						plugin.playerNPCs.put(player.getName(), npcs);
 						plugin.saveHashMap();
 						player.sendMessage(PREFIX + " Successfully tamed bot.");

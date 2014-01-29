@@ -8,6 +8,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import main.java.net.bigbadcraft.npcsquad.commands.NPCSquadCommand;
+import main.java.net.bigbadcraft.npcsquad.listeners.NPCDamageListener;
+import main.java.net.bigbadcraft.npcsquad.listeners.NPCFollowPlayerListener;
 import main.java.net.bigbadcraft.npcsquad.listeners.NPCPlayerRegisterListener;
 import main.java.net.bigbadcraft.npcsquad.listeners.NPCTameListener;
 import main.java.net.bigbadcraft.npcsquad.managers.NPCSquadManager;
@@ -63,6 +65,8 @@ public class NPCSquad extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(new NPCPlayerRegisterListener(this), this);
 		getServer().getPluginManager().registerEvents(new NPCTameListener(this), this);
+		getServer().getPluginManager().registerEvents(new NPCDamageListener(this), this);
+		getServer().getPluginManager().registerEvents(new NPCFollowPlayerListener(this), this);
 		
 		getCommand("npcsquad").setExecutor(new NPCSquadCommand(this));
 	}

@@ -1,6 +1,7 @@
 package main.java.net.bigbadcraft.npcsquad.managers;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Random;
 
 import main.java.net.bigbadcraft.npcsquad.NPCSquad;
@@ -9,13 +10,19 @@ import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.Lists;
+
 public class NPCSquadManager {
+	
+	private final ChatColor G = ChatColor.GOLD;
+	private final ChatColor W = ChatColor.WHITE;
 	
 	private NPCSquad plugin;
 	public NPCSquadManager(NPCSquad plugin) {
@@ -32,6 +39,7 @@ public class NPCSquadManager {
 			
 			npc.spawn(new Location(Bukkit.getWorld(world), x + 0.0D, y + 1.0D,z + 0.0D));
 			npc.setProtected(protectNPCs);
+			npc.data().setPersistent("health", (int) 20);
 		}
 	}
 	
@@ -46,6 +54,7 @@ public class NPCSquadManager {
 			for (int i = 0; i < botAmount; i++) {
 				npc.spawn(new Location(Bukkit.getWorld(world), x + 0.0D, 1.0D,z + 0.0D));
 				npc.setProtected(protectNPCs);
+				npc.data().setPersistent("health", (int) 20);
 			}
 		}
 	}
@@ -67,18 +76,19 @@ public class NPCSquadManager {
 		
 		npc.spawn(loc.add(0.0D, 1.0D, 0.0D));
 		npc.setProtected(protectNPC);
+		npc.data().setPersistent("health", (int) 20);
 	}
 	
 	public void eliminateAllNPCs(String world) {
 		
 		/* Needs to be fixed, freezes server */
 		
-		Iterator<NPC> iterator = CitizensAPI.getNPCRegistry().iterator();
+		List<NPC> npcList = Lists.newArrayList(CitizensAPI.getNPCRegistry().iterator());
 		
-		do {
-			iterator.next().despawn();
-			iterator.next().destroy();
-		} while (iterator.hasNext());
+		for (NPC npcs : npcList) {
+			npcs.despawn();
+			npcs.destroy();
+		}
 		
 	}
 	
@@ -107,6 +117,57 @@ public class NPCSquadManager {
 		}
 		
 		return count;
+	}
+	
+	public double getNPCHealth(int id) {
+		NPC npc = getNPC(id);
+		return npc.data().get("health");
+	}
+	
+	/**
+	 * 
+	 * @param player Send player information of the count of tamed bots
+	 * the id of each bot, name and possibly health.
+	 */
+	public void sendTamedNPCInfoList(Player player) {
+		int tamedBots = plugin.playerNPCs.get(player.getName()).size();
+		
+		player.sendMessage(G + "----------(" + W + "Tamed Bot(s) Info" + G + ")----------");
+		player.sendMessage(G + "Total tamed bots: " + W + tamedBots);
+		
+		for (int ids : plugin.playerNPCs.get(player.getName())) {
+			NPC npc = plugin.npcManager.getNPC(ids);
+			String botName = npc.getFullName();
+			double botHealth = getNPCHealth(ids);
+			player.sendMessage(G + "Id: " + W + ids + ", " + G + "Name: " + W + botName + ", " + G + "Health: " + W + botHealth);
+		}
+		
+		player.sendMessage(G + "-------------------------------------");
+	}
+	
+	public int getTamedNPCs(Player player) {
+		return plugin.playerNPCs.get(player.getName()).size();
+	}
+	
+	public void killTamedNPCs(Player player) {
+		
+		List<Integer> npcIds = plugin.playerNPCs.get(player.getName());
+		
+		for (int ids : npcIds) {
+			NPC npcs = getNPC(ids);
+			npcs.despawn();
+			npcs.destroy();
+		}
+		
+	}
+	
+	public void dismissNPC(Player player, String npcName) {
+		
+		
+	}
+	
+	public void appointNPC(Player player, String npcName) {
+		
 	}
 	
 	public int getTotalUntamedNPCs(String world) {
